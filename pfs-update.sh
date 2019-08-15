@@ -1,6 +1,6 @@
 #!/bin/sh
 DEL=""
-BASENAME=zero-base-1908.pfs #название модуля
+
 ISODIR=Zero-iso # путь к каталогу в котором находятся файлы для будущего iso
 BASEDIR=packages-base #каталог в котором хранятся модули из которых делается base.pfs
 BASEPFS="`ls -1 $ISODIR/zero/base | grep base`" #имя файла .pfs
@@ -24,7 +24,7 @@ pfsmerge $ISODIR/$BASEPFS $ISODIR/pupm-cut.pfs -c $DEL --clean
 
 
 # добавление новых пакетов
-pfsmerge $BASEDIR/new/ $ISODIR/pupm-cut.pfs $ISODIR/$BASENAME
+pfsmerge $BASEDIR/new/ $ISODIR/pupm-cut.pfs $ISODIR/$BASEPFS
 rm -rf $ISODIR/pupm-cut.pfs
 fi
 
