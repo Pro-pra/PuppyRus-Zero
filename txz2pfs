@@ -15,7 +15,7 @@ cd "$d"
 xz -dc ../"$1" |tar xvf - 
 
 #[ -f install/doinst.sh ] && mv install/doinst.sh start.sh && chmod 755 start.sh && cat install/slack-desc |grep acl: >>start.sh
-[ -f install/doinst.sh ] && echo "<< info" >start.sh && cat install/slack-desc |grep acl: >>start.sh && echo "info" >>start.sh && chmod 755 start.sh
+[ -f install/doinst.sh ] && echo "<< info" >start.sh && cat install/slack-desc |grep -v '^#' >>start.sh && echo "info" >>start.sh && chmod 755 start.sh
 
 #создаем нужные сим.ссылки
 chmod 755 install/doinst.sh
