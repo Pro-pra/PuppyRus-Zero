@@ -23,16 +23,41 @@ chmod 755 install/doinst.sh
 
 #удаляем unstall и переносим каталоги из корня в /usr
 rm -rf install  >/dev/null 2>&1
-mv bin/* usr/bin >/dev/null 2>&1
-rm -d bin >/dev/null 2>&1
-mv sbin/* usr/bin >/dev/null 2>&1
-rm -d sbin >/dev/null 2>&1
-mv lib/* usr/lib >/dev/null 2>&1
-rm -d lib  >/dev/null 2>&1
+if [ -d bin && -d usr/bin ]; then 
+    mv bin/* usr/bin && rm -d bin >/dev/null 2>&1
+else 
+    mkdir usr/bin
+    mv bin/* usr/bin && rm -d bin >/dev/null 2>&1
+fi
+if [ -d sbin && -d usr/bin]; then 
+    mv sbin/* usr/bin && rm -d sbin >/dev/null 2>&1
+else
+    mkdir usr/bin
+    mv sbin/* usr/bin && rm -d sbin >/dev/null 2>&1
+fi
+if [ -d lib && -d usr/lib ]; then
+    mv lib/* usr/lib && rm -d lib  >/dev/null 2>&1
+else
+    mkdir usr/lib
+    mv lib/* usr/lib && rm -d lib  >/dev/null 2>&1
+fi
+if [ -d usr/sbin && -d usr/bin ]; then
+    mv usr/sbin/* usr/bin && rm -d usr/sbin  >/dev/null 2>&1
+else
+    mkdir usr/bin
+    mv usr/sbin/* usr/bin && rm -d usr/sbin  >/dev/null 2>&1
+fi
 
 cd ..
 ./trim -lm "$d"
 ./trim -d "$d"
+
+
+# Найти в пакете все текстовые файлы и заменить в них
+# sbin на bin, потом ' /bin/' заменяем на ' /usr/bin/'
+# видимо надо связку с find делать чтобы не заменяло в бинарных файлах!
+#sed -i -e 's/sbin/bin/g; s/ \/bin\// \/usr\/bin\//g' * ;
+
 
 #mkpfs-p2p "$d" 
 #[ ! "`find "$d-DEV" -type f`" ] && rm -r "$d-DEV" #&
