@@ -159,6 +159,8 @@ mv $r/usr/lib/*.a $r$rd/usr/lib/ 2>/dev/null
 mv $r/usr/lib/*.la $r$rd/usr/lib/ 2>/dev/null
 fi 
 
+# нужна команда переноса всех .la из подкаталогов /usr/lib/ 
+# сейчас переносит только то что непосредственно в /usr/lib
 rmdir $r/usr/share/locale 2>/dev/null
 rmdir $r/usr/share 2>/dev/null
 #mv $r/usr/lib/libpython2* . $rd/usr/lib/
