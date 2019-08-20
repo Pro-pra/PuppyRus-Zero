@@ -14,17 +14,31 @@ mkdir "$d"
 cd "$d"
 xz -dc ../"$1" |tar xvf - 
 
-#[ -f install/doinst.sh ] && mv install/doinst.sh start.sh && chmod 755 start.sh && cat install/slack-desc |grep acl: >>start.sh
+#заполняем описание в pfs.specs
 if [ -f install/slack-desc ]; then 
     mkdir -p etc/packages/mount/$d
     cat install/slack-desc |tail -n 11 > etc/packages/mount/$d/pfs.specs
 fi
 
 #создаем нужные сим.ссылки
-[ -f install/doinst.sh ] && chmod 755 install/doinst.sh && ./install/doinst.sh
+if [ -f install/doinst.sh ]; then
+    sed -i 's/sbin/bin/g' install/doinst.sh # меняем sbin на bin
+    sed -i 's/..\/..\/lib\///g' install/doinst.sh #корректировка ссылок на .so
+    chmod 755 install/doinst.sh 
+    ./install/doinst.sh
+fi
+
+#Для всех файлов в пакете, делаем проверку типа файла
+#если файл текстовый, то заменяем в нем sbin на bin
+for file in `find -P -type f`
+do
+ FILE_TYPE="`file -b --mime-type $file | grep text`"
+ [ $FILE_TYPE ] && sed -i 's/sbin/bin/g' $file
+done
 
 #удаляем unstall
 rm -rf install  >/dev/null 2>&1
+
 if [ -d sbin ] && [ -d bin ]; then 
     mv sbin/* bin && rm -d sbin >/dev/null 2>&1
 else
@@ -46,5 +60,5 @@ cd ..
 ./trim -d "$d"
 
 
-#требуется патченый файл pfs чтобы не затирался файл pfs.specs с описанием.
+#требуется патченый файл pfs чтобы не затирался файл pfs.specs с описанием
 #mkpfs --mklist "$d"
