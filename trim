@@ -225,7 +225,7 @@ if [ "$rd" != "xxx" ];then
 fi
 
 
-for d in /usr/doc /usr/man /usr/share/help /usr/share/doc /usr/share/gtk-doc/html /usr/share/info /usr/share/licenses /usr/share/man ;do
+for d in /usr/doc /usr/info /usr/man /usr/share/help /usr/share/doc /usr/share/gtk-doc/html /usr/share/info /usr/share/licenses /usr/share/man ;do
 #	[ -d "$r$d" ] &&  M $r$d $rm "$r$d" 
 #	echo "mv $r$d $r$rm`dirname $d`"
     if [ "$rm" != "xxx" ] ;then
