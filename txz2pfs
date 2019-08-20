@@ -1,4 +1,4 @@
-#!/bin/ash
+#!/bin/sh
 #For PuppyRus-Zero with Slackware packages
 v="190819"
 
@@ -15,37 +15,30 @@ cd "$d"
 xz -dc ../"$1" |tar xvf - 
 
 #[ -f install/doinst.sh ] && mv install/doinst.sh start.sh && chmod 755 start.sh && cat install/slack-desc |grep acl: >>start.sh
-[ -f install/doinst.sh ] && echo "<< info" >start.sh && cat install/slack-desc |grep -v '^#' >>start.sh && echo "info" >>start.sh && chmod 755 start.sh
+if [ -f install/slack-desc ]; then 
+    mkdir -p etc/packages/mount/$d
+    cat install/slack-desc |tail -n 11 > etc/packages/mount/$d/pfs.specs
+fi
 
 #создаем нужные сим.ссылки
-chmod 755 install/doinst.sh
-./install/doinst.sh
+[ -f install/doinst.sh ] && chmod 755 install/doinst.sh && ./install/doinst.sh
 
-#удаляем unstall и переносим каталоги из корня в /usr
+#удаляем unstall
 rm -rf install  >/dev/null 2>&1
-if [ -d bin && -d usr/bin ]; then 
-    mv bin/* usr/bin && rm -d bin >/dev/null 2>&1
-else 
-    mkdir usr/bin
-    mv bin/* usr/bin && rm -d bin >/dev/null 2>&1
-fi
-if [ -d sbin && -d usr/bin]; then 
-    mv sbin/* usr/bin && rm -d sbin >/dev/null 2>&1
+if [ -d sbin ] && [ -d bin ]; then 
+    mv sbin/* bin && rm -d sbin >/dev/null 2>&1
 else
-    mkdir usr/bin
-    mv sbin/* usr/bin && rm -d sbin >/dev/null 2>&1
+    [ -d sbin ] && mkdir bin && mv sbin/* bin && rm -d sbin >/dev/null 2>&1
 fi
-if [ -d lib && -d usr/lib ]; then
+if [ -d lib ] && [ -d usr/lib ]; then
     mv lib/* usr/lib && rm -d lib  >/dev/null 2>&1
 else
-    mkdir usr/lib
-    mv lib/* usr/lib && rm -d lib  >/dev/null 2>&1
+    [ -d lib ] && mkdir usr/lib && mv lib/* usr/lib && rm -d lib  >/dev/null 2>&1
 fi
-if [ -d usr/sbin && -d usr/bin ]; then
+if [ -d usr/sbin ] && [ -d usr/bin ]; then
     mv usr/sbin/* usr/bin && rm -d usr/sbin  >/dev/null 2>&1
 else
-    mkdir usr/bin
-    mv usr/sbin/* usr/bin && rm -d usr/sbin  >/dev/null 2>&1
+    [ -d usr/sbin ] && mkdir usr/bin && mv usr/sbin/* usr/bin && rm -d usr/sbin  >/dev/null 2>&1
 fi
 
 cd ..
@@ -53,23 +46,5 @@ cd ..
 ./trim -d "$d"
 
 
-# Найти в пакете все текстовые файлы и заменить в них
-# sbin на bin, потом ' /bin/' заменяем на ' /usr/bin/'
-# видимо надо связку с find делать чтобы не заменяло в бинарных файлах!
-#sed -i -e 's/sbin/bin/g; s/ \/bin\// \/usr\/bin\//g' * ;
-
-
-#mkpfs-p2p "$d" 
-#[ ! "`find "$d-DEV" -type f`" ] && rm -r "$d-DEV" #&
-#F(){
-#source_dir="$(realpath "$1")/"
-#echo "%FILES%"
-#find "${source_dir}" ! -type d        | sed "s:$source_dir::" |egrep -v '^.PKGINFO$|^.INSTALL$' #> "${dest_dir}${PFSDIR}/mount/${pack_name}/pfs.files" &&
-#find "${source_dir}"   -type d        | sed "s:$source_dir::" |awk '{print $0"/"}' #|egrep -v '^/.wh..wh.|^'$PFSDIR'' #> "${dest_dir}${PFSDIR}/mount/${pack_name}/pfs.dirs.empty" &&
-#}
-#if [ -d "$d"_DEV ] ;then
-#    F "$d" >"$d"_DEV/"$d2"/files
-#else
-#    F "$d" >"$d"/"$d2"/files
-#fi
-#mkpfs "$d"
+#требуется патченый файл pfs чтобы не затирался файл pfs.specs с описанием.
+#mkpfs --mklist "$d"
