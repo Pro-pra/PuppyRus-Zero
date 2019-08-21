@@ -16,8 +16,9 @@ xz -dc ../"$1" |tar xvf -
 
 #заполняем описание в pfs.specs
 if [ -f install/slack-desc ]; then 
+    SHORT_NAME=$(echo $d|cut -d\- -f1)
     mkdir -p etc/packages/mount/$d
-    cat install/slack-desc |tail -n 11 > etc/packages/mount/$d/pfs.specs
+    grep $SHORT_NAME install/slack-desc |sed "s/$SHORT_NAME://" > etc/packages/mount/$d/pfs.specs
 fi
 
 #создаем нужные сим.ссылки
@@ -25,7 +26,7 @@ if [ -f install/doinst.sh ]; then
     sed -i 's/sbin/bin/g' install/doinst.sh # меняем sbin на bin
     sed -i 's/..\/..\/lib\///g' install/doinst.sh #корректировка ссылок на .so
     chmod 755 install/doinst.sh 
-    ./install/doinst.sh
+    sh install/doinst.sh
 fi
 
 #Для всех файлов в пакете, делаем проверку типа файла
