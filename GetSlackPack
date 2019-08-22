@@ -2,8 +2,8 @@
 [ $1 ] || exit
 REPO="http://mirror.yandex.ru/slackware/slackware-current/slackware"
 #REPO="http://slackware.cs.utah.edu/pub/slackware/slackware-current/slackware"
-curl $REPO/FILE_LIST | awk '/\.txz$/ {print $8}'|cut -b2- > /tmp/slackware.file.lst
-grep /$1 /tmp/slackware.file.lst | while read P;
+curl $REPO/FILE_LIST | awk '/\.txz$/ {print $8}'|cut -b2- > /var/tmp/slackware.file.lst
+grep /$1 /var/tmp/slackware.file.lst | while read P;
 	do
 		D=$(basename $P .txz)
 		p=$(basename $P)
@@ -14,3 +14,4 @@ grep /$1 /tmp/slackware.file.lst | while read P;
 		
 		txz2pfs $p
 	done
+rm /var/tmp/slackware.file.lst
