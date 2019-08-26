@@ -3,6 +3,8 @@
 v="190819"
 
 [ ! "$1" ] && echo "Usage $0 *.txz" && exit
+[ ! "${1##*.}" = "txz" ] && exit
+
 d="`basename "$1" .txz`"
 #d2="var/lib/pacman/local/`basename "$1" |sed 's/-[^-]*$//'`"
 #d2="$(basename "$d" .pkg.tar.xz)"
