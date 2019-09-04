@@ -1,0 +1,39 @@
+#!/bin/ash
+#180109 sfs DDSE
+[ ! "$1" ] && echo "Usage: $0 [-p] dir
+    Поиск недостающих библиотек для модуля (пакета) распакованного в dir
+    Перед запуском рекомендуется отключить все модули кроме базовых и ничего не устанавливать pacman-ом
+    -p - найти пакеты, содержащие библиотеки
+    -f - показать каким файлам каких библиотек не хватает" && exit
+[ "$1" = "-p" ] && p=1 && shift
+
+if [ "$1" = "-f" ] ;then
+    find "$2" -type f -executable -print -exec ldd {} \; |egrep '^([^[:space:]]|.* => not found)' \
+	|grep -B1  " => not found" |sed 's#'$2'##'
+    exit
+fi
+
+d="`/usr/bin/find "$1" -type f -executable -exec ldd {} \; |awk '/=> not found/ {print $1}'|sort -u`"
+echo -n "cp -d "
+echo "$d" |awk -F '\\.so' '{print $1".*"}'|tr "\n" " "
+echo
+echo ======== не хватает `echo $d|wc -w` библиотек ======
+echo "$d" 
+
+P(){
+for i in $d;do
+    #echo "$i "`pkgfile "$i"`
+    pkgfile "$i"
+done |sort -u  -t / -k2 
+}
+#P
+[ "$p" ] || exit
+[ "`which pkgfile`" ] || exit
+echo ======== ищем пакеты =======
+for i in $d;do
+    echo "$i "`pkgfile "$i"`
+done |sort -u
+#p="`P`"
+#echo $p
+#pacman -r /home/live/1/chromium-browser-bin/1 -Sy "`echo $p`"
+#pacman -Sw `echo $p`
