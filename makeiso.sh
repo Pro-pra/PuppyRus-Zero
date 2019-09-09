@@ -12,7 +12,11 @@ DATE=`date +%y%m%d`  #подстановка текущей даты в имя �
 CDLABEL=Zero
 
 #$mkisofs -allow-lowercase -J -D -R -o "$OUTPUT"PuppyRus-Icewm-"$DATE".iso -b grldr -no-emul-boot -boot-load-size 4 -hide boot.catalog -boot-info-table "$ISODIR"
-$mkisofs -allow-lowercase -J -D -R -A "$CDLABEL" -V "$CDLABEL" -b grldr -no-emul-boot -boot-load-size 4 -hide boot.catalog -boot-info-table -o "$OUTPUT"PuppyRus-Zero-"$DATE".iso .
+#для загрузчика grub4dos 
+#$mkisofs -allow-lowercase -J -D -R -A "$CDLABEL" -V "$CDLABEL" -b grldr -no-emul-boot -boot-load-size 4 -hide boot.catalog -boot-info-table -o "$OUTPUT"PuppyRus-Zero-"$DATE".iso .
+
+#для загрузчика Grub2
+$mkisofs -allow-lowercase -J -D -R -A "$CDLABEL" -V "$CDLABEL" -b grub2 -no-emul-boot -boot-load-size 4 -hide boot.catalog -boot-info-table -o "$OUTPUT"PuppyRus-Zero-"$DATE".iso .
 
 #секция удаления старых версий iso (например старее 1 года)
 
