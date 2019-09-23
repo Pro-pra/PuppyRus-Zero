@@ -1,6 +1,6 @@
 #!/bin/sh
 
-mkisofs="`which mkisofs || which genisoimage`"
+mkisofs="`which xorriso`"
 [ "$mkisofs" = "" ] && echo "Не найдена программа для создания iso" &&exit
 
 [ "$1" ] && ISODIR="$1" || ISODIR=isolinux-builds #каталог с файлами для упаковки в iso
@@ -11,12 +11,13 @@ OUTPUT=../ #каталог в котором создавать iso
 DATE=`date +%y%m%d`  #подстановка текущей даты в имя образа
 CDLABEL=Zero
 
-#$mkisofs -allow-lowercase -J -D -R -o "$OUTPUT"PuppyRus-Icewm-"$DATE".iso -b grldr -no-emul-boot -boot-load-size 4 -hide boot.catalog -boot-info-table "$ISODIR"
-#для загрузчика grub4dos 
-#$mkisofs -allow-lowercase -J -D -R -A "$CDLABEL" -V "$CDLABEL" -b grldr -no-emul-boot -boot-load-size 4 -hide boot.catalog -boot-info-table -o "$OUTPUT"PuppyRus-Zero-"$DATE".iso .
-
-#для загрузчика Grub2
-$mkisofs -allow-lowercase -J -D -R -A "$CDLABEL" -V "$CDLABEL" -b grub2 -no-emul-boot -boot-load-size 4 -hide boot.catalog -boot-info-table -o "$OUTPUT"PuppyRus-Zero-"$DATE".iso .
+$mkisofs  -as mkisofs -allow-lowercase -J -D -R -A "$CDLABEL" -V "$CDLABEL" \
+-b grub2 \
+-no-emul-boot -boot-load-size 4 -hide boot.catalog -boot-info-table \
+-isohybrid-mbr /usr/lib/syslinux/isohdpfx.bin -eltorito-alt-boot \
+-e EFI/BOOT/bootx64.efi \
+-no-emul-boot -isohybrid-gpt-basdat \
+-o "$OUTPUT"PuppyRus-Zero-"$DATE".iso  .
 
 #секция удаления старых версий iso (например старее 1 года)
 
