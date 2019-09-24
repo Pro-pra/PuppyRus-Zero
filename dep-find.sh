@@ -25,15 +25,25 @@ if [ "$1" = "-base" ] ;then
     for LIB in `sort -u /var/tmp/dep-find.lst`
     do
 	#делаем поиск каждого файла в каталоге BASE_DIR
-	[ `find "$BASE_DIR/usr/lib" \( -type l -or -type f \) -name "$LIB"` ] || echo "$LIB не найдено в base.pfs"
+	if [ `find "$BASE_DIR/usr/lib" \( -type l -or -type f \) -name "$LIB"` ]; then
+	
+	else
+	    echo "$LIB не найдено в base.pfs"
+	    find "$1" \( -type l -or -type f \) -name "$LIB" -exec echo "$LIB  найден в '$1'" \;
+	    echo
+	fi
     done
     exit
 fi
 
-d="`/usr/bin/find "$1" -type f -executable -exec ldd {} \; |awk '/=> not found/ {print $1}'|sort -u`"
+d="`find "$1" -type f -executable -exec ldd {} \; |awk '/=> not found/ {print $1}'|sort -u`"
 #echo -n "cp -d "
 #echo "$d" |awk -F '\\.so' '{print $1".*"}'|tr "\n" " "
 echo
 echo ======== не хватает `echo $d|wc -w` библиотек ======
-echo "$d" 
-
+echo "$d"
+if [ "$d" ]; then
+echo
+echo "Проверка в содержимом '$1':"
+find "$1" \( -type l -or -type f \) -name "$d" -exec echo "$d  найден" \;
+fi
