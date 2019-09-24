@@ -26,11 +26,10 @@ if [ "$1" = "-base" ] ;then
     do
 	#делаем поиск каждого файла в каталоге BASE_DIR
 	if [ `find "$BASE_DIR/usr/lib" \( -type l -or -type f \) -name "$LIB"` ]; then
-	
+	:
 	else
-	    echo "$LIB не найдено в base.pfs"
-	    find "$1" \( -type l -or -type f \) -name "$LIB" -exec echo "$LIB  найден в '$1'" \;
-	    echo
+	    echo "$LIB не найден"
+	    find "$2" \( -type l -or -type f \) -name "$LIB" -exec echo "$LIB  найден в '$2'" \;
 	fi
     done
     exit
