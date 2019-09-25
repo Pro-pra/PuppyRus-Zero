@@ -1,12 +1,12 @@
-#!/bin/sh
+#!/bin/bash
 
 REPO="http://mirror.yandex.ru/slackware/slackware-current/slackware"
 #REPO="http://slackware.cs.utah.edu/pub/slackware/slackware-current/slackware"
 
-#[ -f /var/tmp/slackware.file.lst ] && rm -f /var/tmp/slackware.file.lst
+[ -f /var/tmp/slackware.file.lst ] && rm -f /var/tmp/slackware.file.lst
 #получить список пакетов из репозитария slackware, записать в файл
-#curl $REPO/FILE_LIST | awk '/\.txz$/ {print $8}'|cut -b2- > /var/tmp/slackware.file.lst
-awk '/\.txz$/ {print $8}' ./FILE_LIST | cut -d / -f 3 > /var/tmp/slackware.file.lst
+curl $REPO/FILE_LIST | awk '/\.txz$/ {print $8}'|cut -b2- > /var/tmp/slackware.file.lst
+#awk '/\.txz$/ {print $8}' ./FILE_LIST | cut -d / -f 3 > /var/tmp/slackware.file.lst
 splitname(){
 local ver sver
   ver=$(echo "$1" \
@@ -22,8 +22,9 @@ local ver sver
      re2="${re2}.*\\$n"
      sver="${sver}${sver:+-}$partver"
   done
-  declare -g $2=${$1%%-[0-9|p-]*}
-  declare -g $3=$sver
+    #declare -g $2=$(echo "$1" |sed 's/'$re1'/'\\1'/')
+    declare -g $2=${1%%-[0-9|p-]*}
+    declare -g $3=$sver
 }
 
 # newer <версия1> <версия2> - версия1 больше/новее версии2 ?
@@ -36,15 +37,16 @@ for MOD in `ls -A $MOD_DIR`
 do
     #разделяем название модуля на номер версии и название
     splitname "$MOD" modname modver
-
     if [ $modver ]; then
-#	echo $modname $modver
+	#echo "В системе $modname $modver"
 	#ищем строку modname в списке файлов
-	PKG="`grep --basic-regexp --max-count=1 --ignore case ^$modname /var/tmp/slackware.file.lst`"
+	PKG="`grep --basic-regexp --max-count=1 --ignore-case -w "^$modname" /var/tmp/slackware.file.lst`"
 	#если нашли строку, выделяем имя и номер версии
-	[ $PKG ] && splitname "$PKG" pkgname pkgver
-#	echo $pkgname $pkgver
-	# сравниваем номера версий
-	#newer $pkgver $modver && echo "Для $MOD есть обновление версии $pkgver"
+	if [ $PKG ];then 
+	    splitname "$PKG" pkgname pkgver 
+	    #echo "В репозитарии $pkgname $pkgver"
+	    # сравниваем номера версий если определили версию
+	    [ $pkgver ] && newer $pkgver $modver && echo "Для модуля $MOD есть обновление в репозитарии $pkgver"
+	fi
     fi
 done
