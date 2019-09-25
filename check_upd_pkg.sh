@@ -22,7 +22,7 @@ local ver sver
      re2="${re2}.*\\$n"
      sver="${sver}${sver:+-}$partver"
   done
-  declare -g $2=$(echo "$1" |sed 's/'$re1'/'\\1'/')
+  declare -g $2=${$1%%-[0-9|p-]*}
   declare -g $3=$sver
 }
 
@@ -40,10 +40,10 @@ do
     if [ $modver ]; then
 #	echo $modname $modver
 	#ищем строку modname в списке файлов
-	PKG="`grep --max-count=1 $modname /var/tmp/slackware.file.lst`"
+	PKG="`grep --basic-regexp --max-count=1 --ignore case ^$modname /var/tmp/slackware.file.lst`"
 	#если нашли строку, выделяем имя и номер версии
-#	[ $PKG ] && splitname "$PKG" pkgname pkgver
-	echo $pkgname $pkgver
+	[ $PKG ] && splitname "$PKG" pkgname pkgver
+#	echo $pkgname $pkgver
 	# сравниваем номера версий
 	#newer $pkgver $modver && echo "Для $MOD есть обновление версии $pkgver"
     fi
