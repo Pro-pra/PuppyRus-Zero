@@ -58,7 +58,12 @@ if [ "$1" = "-base" ] ;then
 		echo "в репозитарии Slackware?"
 		echo -n "Нажмите ENTER для пропуска, или любую букву для поиска."
 		read N
-		[ $N != "" ] && NO_CHECK=1 && find_pkg $LIB
+		if [ $N != "" ]; then 
+		    NO_CHECK=1 
+		    find_pkg $LIB
+		else 
+		    NO_CHECK=2
+		fi
 		
 	    fi
 	fi
@@ -74,13 +79,18 @@ if [ "$d" ]; then
 echo
     if [ `find "$1" \( -type l -or -type f \) -name "$d"` ]; then
 	echo "$d  найден в '$1'"
-    elif [ "$NO_CHECK" = "1" ]; then
+    elif [ "$NO_CHECK" = 1 ]; then
 		find_pkg $LIB
-    else
+    elif [ "$NO_CHECK" = 0 ]; then
 	echo "Выполнить поиск пакета содержащего $d"
 	echo "в репозитарии Slackware?"
 	echo -n "Нажмите ENTER для пропуска, или любую букву для поиска."
 	read N
-	[ $N != "" ] && NO_CHECK=1 && find_pkg $d
+	if [ $N != "" ]; then 
+	    NO_CHECK=1 
+	    find_pkg $LIB
+	else 
+	    NO_CHECK=2
+	fi
     fi
 fi
