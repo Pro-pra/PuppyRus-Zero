@@ -6,7 +6,8 @@
     Поиск недостающих библиотек для модуля (пакета) распакованного в dir
     если не задан параметр -base поиск выполняется в существующем /usr/lib
     -base - поиск библиотек выполняется только в модуле base" && exit
-#[ "$1" = "-p" ] && p=1 && shift
+
+NO_CHECK=0 #выдать запрос на поиск в онлайн репозитарии Slackware
 
 find_pkg () {
 [ "$1" ] || return
@@ -50,12 +51,15 @@ if [ "$1" = "-base" ] ;then
 	    echo "$LIB не найден"
 	    if [ `find "$2" \( -type l -or -type f \) -name "$LIB"` ]; then
 		echo "$LIB  найден в '$2'"
+	    elif [ "$NO_CHECK" = "1" ]; then
+		find_pkg $LIB
 	    else
 		echo "Выполнить поиск пакета содержащего $LIB"
 		echo "в репозитарии Slackware?"
 		echo -n "Нажмите ENTER для пропуска, или любую букву для поиска."
 		read N
-		[ $N != "" ] && find_pkg $LIB
+		[ $N != "" ] && NO_CHECK=1 && find_pkg $LIB
+		
 	    fi
 	fi
     done
@@ -65,16 +69,18 @@ fi
 d="`find "$1" -type f -executable -exec ldd {} \; |awk '/=> not found/ {print $1}'|sort -u`"
 #echo -n "cp -d "
 #echo "$d" |awk -F '\\.so' '{print $1".*"}'|tr "\n" " "
-echo
 echo "$d не найден"
 if [ "$d" ]; then
+echo
     if [ `find "$1" \( -type l -or -type f \) -name "$d"` ]; then
 	echo "$d  найден в '$1'"
+    elif [ "$NO_CHECK" = "1" ]; then
+		find_pkg $LIB
     else
 	echo "Выполнить поиск пакета содержащего $d"
 	echo "в репозитарии Slackware?"
 	echo -n "Нажмите ENTER для пропуска, или любую букву для поиска."
 	read N
-	[ $N != "" ] && find_pkg $d
+	[ $N != "" ] && NO_CHECK=1 && find_pkg $d
     fi
 fi
