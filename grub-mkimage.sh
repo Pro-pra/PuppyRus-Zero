@@ -31,5 +31,5 @@ part_msdos biosdisk disk fat iso9660 test vbe vga multiboot2 normal gzio xzio se
 #grub-mkimage --directory=/usr/lib/grub/i386-pc --compression=none \
 #--verbose --prefix=\(hd0,msdos1\)/EFI/BOOT \
 #--output=core.img --format=i386-pc \
-#part_gpt part_msdos biosdisk disk fat lvm exfat ext2 ntfs iso9660 gzio xzio test vbe vga multiboot2 normal search configfile linux linux16 chain loopback echo file halt reboot ls true gfxterm gettext font
+#part_gpt part_msdos biosdisk disk fat lvm ntldr exfat ext2 ntfs iso9660 gzio xzio test vbe vga multiboot2 normal search configfile linux linux16 chain loopback echo file halt reboot ls true gfxterm gettext font
 
