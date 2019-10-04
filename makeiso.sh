@@ -9,7 +9,7 @@ mkisofs="`which xorriso`"
 cd "$ISODIR"
 OUTPUT=../ #каталог в котором создавать iso
 DATE=`date +%y%m%d`  #подстановка текущей даты в имя образа
-CDLABEL=Zero
+CDLABEL=ZERO
 
 $mkisofs  -as mkisofs -allow-lowercase -J -D -R -A "$CDLABEL" -V "$CDLABEL" \
 -b grub2 \
