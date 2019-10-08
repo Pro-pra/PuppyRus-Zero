@@ -12,11 +12,11 @@ DATE=`date +%y%m%d`  #подстановка текущей даты в имя �
 CDLABEL=ZERO
 
 $mkisofs  -as mkisofs -allow-lowercase -J -D -R -A "$CDLABEL" -V "$CDLABEL" \
--b grub2 \
 -no-emul-boot -boot-load-size 4 -hide boot.catalog -boot-info-table \
--isohybrid-mbr /usr/lib/syslinux/isohdpfx.bin -eltorito-alt-boot \
--e EFI/BOOT/bootx64.efi \
--no-emul-boot -isohybrid-gpt-basdat \
+-b grub2.eltorito --grub2-mbr /usr/lib/grub/i386-pc/boot_hybrid.img \
+-boot-info-table --grub2-boot-info grub2.eltorito \
+-eltorito-alt-boot --efi-boot EFI/BOOT/bootx64.efi \
+-no-emul-boot \
 -o "$OUTPUT"PuppyRus-Zero-"$DATE".iso  .
 
 #секция удаления старых версий iso (например старее 1 года)
