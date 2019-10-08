@@ -11,6 +11,13 @@ OUTPUT=../ #каталог в котором создавать iso
 DATE=`date +%y%m%d`  #подстановка текущей даты в имя образа
 CDLABEL=ZERO
 
+if [ -f ./grub2.eltorito ]; then
+  echo "Найден файл загрузчика grub2.eltorito"
+else
+  [ -f /usr/lib/grub/grub2.eltorito ] && cp -f /usr/lib/grub/grub2.eltorito ./ || echo "Не найден файл загрузчика grub2.eltorito"
+fi
+  
+
 $mkisofs  -as mkisofs -allow-lowercase -J -D -R -A "$CDLABEL" -V "$CDLABEL" \
 -no-emul-boot -boot-load-size 4 -hide boot.catalog -boot-info-table \
 -b grub2.eltorito --grub2-mbr /usr/lib/grub/i386-pc/boot_hybrid.img \
