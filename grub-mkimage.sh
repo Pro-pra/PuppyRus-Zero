@@ -23,8 +23,8 @@ part_gpt part_msdos disk fat exfat lvm ext2 ntfs iso9660 normal gzio xzio test s
 
 #для CDROM
 grub-mkimage --directory=/usr/lib/grub/i386-pc --compression=auto \
---config=/usr/share/grub/grub.cfg --verbose --prefix=\(CD\)/EFI/BOOT \
---output=grub2 --format=i386-pc-eltorito \
+--config=/usr/share/grub/grub.cfg --verbose --prefix=/EFI/BOOT \
+--output=grub2.eltorito --format=i386-pc-eltorito \
 part_msdos biosdisk disk fat iso9660 test vbe vga multiboot2 normal gzio xzio search configfile linux linux16 chain loopback echo file halt reboot ls true gfxterm gettext font
 
 #для USB образа
