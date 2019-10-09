@@ -24,7 +24,7 @@ $mkisofs  -as mkisofs -allow-lowercase -J -D -R -A "$CDLABEL" -V "$CDLABEL" \
 -b grub2.eltorito --grub2-mbr /usr/lib/grub/i386-pc/boot_hybrid.img \
 -boot-info-table --grub2-boot-info grub2.eltorito \
 -append-partition 1 0xef /usr/lib/grub/efi.img \
--eltorito-alt-boot -e --interval:appended-partition_1:all:: \
+-eltorito-alt-boot --efi-boot EFI/BOOT/bootx64.efi \
 -no-emul-boot \
 -o "$OUTPUT"PuppyRus-Zero-"$DATE".iso  .
 
