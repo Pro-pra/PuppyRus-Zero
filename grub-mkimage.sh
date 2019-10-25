@@ -19,7 +19,7 @@
 grub-mkimage --directory=/usr/lib/grub/x86_64-efi --compression=auto \
 --config=/usr/share/grub/grub.cfg --verbose --prefix=/EFI/BOOT \
 --output=grubx64.efi --format=x86_64-efi \
-part_gpt part_msdos disk memdisk fat exfat lvm ext2 ntfs iso9660 normal gzio xzio test search multiboot2 configfile linux linux16 chain loopback echo efi_gop efi_uga file halt reboot ls true gfxterm gettext font
+part_gpt part_msdos disk memdisk fat exfat lvm ext2 ntfs iso9660 normal gzio xzio test search configfile linux linux16 chain loopback echo efi_gop efi_uga file halt reboot ls true gfxterm gettext font
 
 #для CDROM
 grub-mkimage --directory=/usr/lib/grub/i386-pc --compression=auto \
@@ -31,5 +31,5 @@ part_msdos biosdisk disk fat iso9660 test vbe vga normal gzio xzio search config
 #grub-mkimage --directory=/usr/lib/grub/i386-pc --compression=none \
 #--verbose --prefix=\(hd0,msdos1\)/EFI/BOOT \
 #--output=core.img --format=i386-pc \
-#part_gpt part_msdos biosdisk disk memdisk fat lvm ntldr exfat ext2 ntfs iso9660 gzio xzio test vbe vga multiboot2 normal search configfile linux linux16 chain loopback echo file halt reboot ls true gfxterm gettext font
+#part_gpt part_msdos biosdisk disk memdisk fat lvm ntldr exfat ext2 ntfs iso9660 gzio xzio test vbe vga normal search configfile linux linux16 chain loopback echo file halt reboot ls true gfxterm gettext font
 
