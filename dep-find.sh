@@ -46,7 +46,7 @@ if [ "$1" = "-base" ] ;then
     do
 	#делаем поиск каждого файла в каталоге BASE_DIR
 	if [ `find "$BASE_DIR/usr/lib" \( -type l -or -type f \) -name "$LIB"` ]; then
-	:
+	true
 	else
 	    echo "$LIB не найден"
 	    if [ `find "$2" \( -type l -or -type f \) -name "$LIB"` ]; then
@@ -76,7 +76,7 @@ d="`find "$1" -type f -executable -exec ldd {} \; |awk '/=> not found/ {print $1
 #echo "$d" |awk -F '\\.so' '{print $1".*"}'|tr "\n" " "
 echo "$d не найден"
 if [ "$d" ]; then
-echo
+true
     if [ `find "$1" \( -type l -or -type f \) -name "$d"` ]; then
 	echo "$d  найден в '$1'"
     elif [ "$NO_CHECK" = 1 ]; then
